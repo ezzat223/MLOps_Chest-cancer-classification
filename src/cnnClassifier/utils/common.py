@@ -1,28 +1,26 @@
 import os
+from box import ConfigBox
+# Handles errors specific to the box library when a Box structure cannot be formed.
 from box.exceptions import BoxValueError
 import yaml
-from cnnClassifier import logger
 import json
 import joblib
 from ensure import ensure_annotations
-from box import ConfigBox
 from pathlib import Path
+# Used for defining function parameters or return types when any data type is acceptable.
 from typing import Any
 import base64
+from cnnClassifier import logger
 
 
-
+# Ensures that types provided in function annotations are enforced at runtime.
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
     """reads yaml file and returns
-
     Args:
         path_to_yaml (str): path like input
-
     Raises:
         ValueError: if yaml file is empty
-        e: empty file
-
     Returns:
         ConfigBox: ConfigBox type
     """
@@ -30,9 +28,11 @@ def read_yaml(path_to_yaml: Path) -> ConfigBox:
         with open(path_to_yaml) as yaml_file:
             content = yaml.safe_load(yaml_file)
             logger.info(f"yaml file: {path_to_yaml} loaded successfully")
+            # ConfigBox enables dictionary-like data to be accessed as attributes instead of a dictionary.
             return ConfigBox(content)
     except BoxValueError:
         raise ValueError("yaml file is empty")
+    # General Exception for any other errors.
     except Exception as e:
         raise e
 
@@ -54,9 +54,8 @@ def create_directories(path_to_directories: list, verbose=True):
 @ensure_annotations
 def save_json(path: Path, data: dict):
     """save json data
-
     Args:
-        path (Path): path to json file
+        path (Path): path to save json file in
         data (dict): data to be saved in json file
     """
     with open(path, "w") as f:
@@ -67,16 +66,13 @@ def save_json(path: Path, data: dict):
 @ensure_annotations
 def load_json(path: Path) -> ConfigBox:
     """load json files data
-
     Args:
         path (Path): path to json file
-
     Returns:
         ConfigBox: data as class attributes instead of dict
     """
     with open(path) as f:
         content = json.load(f)
-
     logger.info(f"json file loaded succesfully from: {path}")
     return ConfigBox(content)
 
@@ -84,7 +80,6 @@ def load_json(path: Path) -> ConfigBox:
 @ensure_annotations
 def save_bin(data: Any, path: Path):
     """save binary file
-
     Args:
         data (Any): data to be saved as binary
         path (Path): path to binary file
@@ -96,10 +91,8 @@ def save_bin(data: Any, path: Path):
 @ensure_annotations
 def load_bin(path: Path) -> Any:
     """load binary data
-
     Args:
         path (Path): path to binary file
-
     Returns:
         Any: object stored in the file
     """
@@ -111,10 +104,8 @@ def load_bin(path: Path) -> Any:
 @ensure_annotations
 def get_size(path: Path) -> str:
     """get size in KB
-
     Args:
         path (Path): path of the file
-
     Returns:
         str: size in KB
     """
@@ -132,4 +123,3 @@ def decodeImage(imgstring, fileName):
 def encodeImageIntoBase64(croppedImagePath):
     with open(croppedImagePath, "rb") as f:
         return base64.b64encode(f.read())
-

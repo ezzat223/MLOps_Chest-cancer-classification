@@ -9,10 +9,7 @@ from cnnClassifier.entity.config_entity import DataIngestionConfig
 class DataIngestion:
     def __init__(self, config: DataIngestionConfig):
         self.config = config
-
-
     
-     
     def download_file(self)-> str:
         '''
         Fetch data from the url
