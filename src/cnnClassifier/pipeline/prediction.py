@@ -9,11 +9,8 @@ class PredictionPipeline:
     def __init__(self,filename):
         self.filename =filename
 
-
-    
     def predict(self):
         ## load model
-        
         # model = load_model(os.path.join("artifacts","training", "model.h5"))
         model = load_model(os.path.join("model", "model.h5"))
 

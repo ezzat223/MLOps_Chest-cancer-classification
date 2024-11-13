@@ -3,7 +3,6 @@ from cnnClassifier.components.data_ingestion import DataIngestion
 from cnnClassifier import logger
 
 
-
 STAGE_NAME = "Data Ingestion stage"
 
 class DataIngestionTrainingPipeline:
@@ -19,7 +18,7 @@ class DataIngestionTrainingPipeline:
 
 
 
-
+# for testing
 if __name__ == '__main__':
     try:
         logger.info(f">>>>>> stage {STAGE_NAME} started <<<<<<")

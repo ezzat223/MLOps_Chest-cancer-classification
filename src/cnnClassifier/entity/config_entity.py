@@ -1,7 +1,9 @@
+# a decorator used to quickly define classes meant to primarily store data.
+# auto-generates __init__, __repr__, and other utility methods.
 from dataclasses import dataclass
 from pathlib import Path
 
-
+# frozen=True parameter makes the instances of these classes immutable, meaning once an instance is created, its attributes cannot be changed.
 @dataclass(frozen=True)
 class DataIngestionConfig:
     root_dir: Path
@@ -21,7 +23,6 @@ class PrepareBaseModelConfig:
     params_include_top: bool
     params_weights: str
     params_classes: int
-
 
 
 

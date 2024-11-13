@@ -1,8 +1,5 @@
 import os
-import urllib.request as request
-from zipfile import ZipFile
 import tensorflow as tf
-import time
 from cnnClassifier.entity.config_entity import TrainingConfig
 from pathlib import Path
 
@@ -11,7 +8,6 @@ from pathlib import Path
 class Training:
     def __init__(self, config: TrainingConfig):
         self.config = config
-
     
     def get_base_model(self):
         self.model = tf.keras.models.load_model(
@@ -19,31 +15,34 @@ class Training:
         )
 
     def train_valid_generator(self):
-
         datagenerator_kwargs = dict(
+            # normalize pixel values to [0,1]
             rescale = 1./255,
+            # validation data percentage
             validation_split=0.20
         )
-
+        # sets params related to the data shape
         dataflow_kwargs = dict(
+            # dimensions of each image, excluding the number of channels.
             target_size=self.config.params_image_size[:-1],
             batch_size=self.config.params_batch_size,
             interpolation="bilinear"
         )
-
+        # Creates a generator for validation data.
         valid_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(
             **datagenerator_kwargs
         )
-
+        # Reads images directly from a directory and organizes them based on subdirectories.
         self.valid_generator = valid_datagenerator.flow_from_directory(
             directory=self.config.training_data,
             subset="validation",
             shuffle=False,
             **dataflow_kwargs
         )
-
+        # Configures the training data generator with optional data augmentation.
         if self.config.params_is_augmentation:
             train_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(
+                # Rotates the images randomly within 40 degrees.
                 rotation_range=40,
                 horizontal_flip=True,
                 width_shift_range=0.2,
@@ -61,15 +60,11 @@ class Training:
             shuffle=True,
             **dataflow_kwargs
         )
-
     
     @staticmethod
     def save_model(path: Path, model: tf.keras.Model):
         model.save(path)
 
-
-
-    
     def train(self):
         self.steps_per_epoch = self.train_generator.samples // self.train_generator.batch_size
         self.validation_steps = self.valid_generator.samples // self.valid_generator.batch_size
@@ -86,4 +81,3 @@ class Training:
             path=self.config.trained_model_path,
             model=self.model
         )
-

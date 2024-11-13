@@ -7,7 +7,6 @@ from cnnClassifier import logger
 STAGE_NAME = "Training"
 
 
-
 class ModelTrainingPipeline:
     def __init__(self):
         pass
@@ -21,7 +20,7 @@ class ModelTrainingPipeline:
         training.train()
 
 
-
+# for testing
 if __name__ == '__main__':
     try:
         logger.info(f"*******************")
@@ -32,4 +31,3 @@ if __name__ == '__main__':
     except Exception as e:
         logger.exception(e)
         raise e
-        
