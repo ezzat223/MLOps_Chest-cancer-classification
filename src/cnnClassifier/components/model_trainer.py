@@ -2,7 +2,7 @@ import os
 import tensorflow as tf
 from cnnClassifier.entity.config_entity import TrainingConfig
 from pathlib import Path
-
+from tensorflow.keras.callbacks import ModelCheckpoint  # Import ModelCheckpoint
 
 
 class Training:
@@ -17,7 +17,7 @@ class Training:
     def train_valid_generator(self):
         datagenerator_kwargs = dict(
             # normalize pixel values to [0,1]
-            rescale = 1./255,
+            rescale=1./255,
             # validation data percentage
             validation_split=0.20
         )
@@ -68,15 +68,26 @@ class Training:
     def train(self):
         self.steps_per_epoch = self.train_generator.samples // self.train_generator.batch_size
         self.validation_steps = self.valid_generator.samples // self.valid_generator.batch_size
+        
+        # Define the checkpoint callback
+        checkpoint_callback = ModelCheckpoint(
+            'artifacts/training/model.h5',  # Path where the model is saved
+            save_best_only=True,  # Save only the best model based on validation accuracy
+            save_weights_only=True,  # Save weights only (model architecture is assumed to be the same)
+            verbose=1
+        )
 
+        # Train the model with the checkpoint callback
         self.model.fit(
             self.train_generator,
             epochs=self.config.params_epochs,
             steps_per_epoch=self.steps_per_epoch,
             validation_steps=self.validation_steps,
-            validation_data=self.valid_generator
+            validation_data=self.valid_generator,
+            callbacks=[checkpoint_callback]  # Pass the checkpoint callback here
         )
 
+        # Save the final model after training (in case you want to keep the final model too)
         self.save_model(
             path=self.config.trained_model_path,
             model=self.model

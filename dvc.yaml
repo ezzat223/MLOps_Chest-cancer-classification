@@ -35,7 +35,8 @@ stages:
       - BATCH_SIZE
       - AUGMENTATION
     outs:
-      - artifacts/training/model.h5
+      - artifacts/training/model.h5:
+          checkpoint: true
   # stage 4
   evaluation:
     cmd: python src/cnnClassifier/pipeline/stage4_model_evaluation.py
