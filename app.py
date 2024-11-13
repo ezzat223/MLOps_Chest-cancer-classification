@@ -18,14 +18,10 @@ class ClientApp:
         self.classifier = PredictionPipeline(self.filename)
 
 
-
-
-
 @app.route("/", methods=['GET'])
 @cross_origin()
 def home():
     return render_template('index.html')
-
 
 
 @app.route("/train", methods=['GET','POST'])
@@ -34,7 +30,6 @@ def trainRoute():
     os.system("python main.py")
     # os.system("dvc repro")
     return "Training done successfully!"
-
 
 
 
